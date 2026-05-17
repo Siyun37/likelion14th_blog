@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
-@Builder
+//@Setter
+//@Builder
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class Article {
 
     @Id // id 필드를 기본키(Primary Key)로 지정
@@ -42,7 +42,12 @@ public class Article {
     }
 
     public void update(String title, String content){
-        this.title=title;
-        this.content=content;
+        if (title != null) {
+            this.title=title;
+        }
+        if (content != null) {
+            this.content=content;
+        }
+
     }
 }

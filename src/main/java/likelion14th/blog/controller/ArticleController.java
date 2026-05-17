@@ -2,15 +2,16 @@ package likelion14th.blog.controller;
 
 import likelion14th.blog.dto.request.ArticleRequest;
 import likelion14th.blog.dto.response.ApiResponse;
-import likelion14th.blog.dto.response.ArticleResponse;
+import likelion14th.blog.dto.response.ArticleDetailResponse;
+import likelion14th.blog.dto.response.ArticleSummaryResponse;
 import likelion14th.blog.service.ArticleService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,11 +20,34 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping()
-    public ResponseEntity<ApiResponse<ArticleResponse>> addArticle(@RequestBody ArticleRequest request) {
-        ArticleResponse articleResponse =
+    public ResponseEntity<ApiResponse<ArticleDetailResponse>> addArticle(@RequestBody ArticleRequest request) {
+        ArticleDetailResponse articleDetailResponse =
                 articleService.addArticle(request.getTitle(), request.getContent(), request.getAuthor(), request.getPassword());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, "게시글 생성에 성공하였습니다.", articleResponse));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, "게시글 생성에 성공하였습니다.", articleDetailResponse));
 
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ArticleDetailResponse>> getOneArticle(@PathVariable Long id) {
+        ArticleDetailResponse articleDetailResponse = articleService.getOneArticle(id);
+
+        return ResponseEntity.ok(ApiResponse.success(200, "게시글 개별 조회에 성공하였습니다.", articleDetailResponse));
+    }
+
+    @GetMapping()
+    public ResponseEntity<ApiResponse<List<ArticleSummaryResponse>>> getArticles() {
+        List<ArticleSummaryResponse> articleDetailResponses = articleService.getArticles();
+
+        return ResponseEntity.ok(ApiResponse.success(200, "게시글 전체 조회에 성공하였습니다.", articleDetailResponses));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<ArticleDetailResponse>> updateArticle(@PathVariable Long id, @RequestBody ArticleRequest request) {
+        ArticleDetailResponse articleDetailResponse = articleService.updateArticle(id, request.getTitle(), request.getContent());
+
+        return ResponseEntity.ok(ApiResponse.success(200, "게시글 수정 성공.", articleDetailResponse));
+    }
+
+
 }
