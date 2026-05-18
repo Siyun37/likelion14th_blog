@@ -5,6 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import likelion14th.blog.domain.Article;
 import likelion14th.blog.dto.response.ArticleDetailResponse;
 import likelion14th.blog.dto.response.ArticleSummaryResponse;
+import likelion14th.blog.dto.response.CommentResponse;
 import likelion14th.blog.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,8 +58,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public void deleteArticle(Long id) {
+    public Void deleteArticle(Long id) {
         articleRepository.deleteById(id);
 
+        return null;
     }
 }
